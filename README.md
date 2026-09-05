@@ -7,7 +7,7 @@ A deliberately over-engineered answer to a simple family question.
 The page shows Stephen Evans's age live, based on:
 
 - Date of birth: **5 September 1943**
-- Assumed birth time: **12:00**
+- Birth time: **04:00**
 - Time zone: **Europe/London**
 
 It includes:
@@ -15,43 +15,43 @@ It includes:
 - calendar age
 - live age in seconds
 - decimal years
+- binary and hexadecimal years
 - halves, quarters, eighths and sixteenths
-- months, weeks, days, hours, minutes and milliseconds
+- Gregorian and lunar months
+- weeks, days, hours, minutes and milliseconds
+- traditional dog years
 - countdown to the next birthday
 - approximate ages in planetary years
+- a birthday-day presentation mode
 
 The calculations use the browser's historical IANA time-zone data. This matters because wartime UK clock rules differed from modern DST rules.
 
-## Add or replace Stephen's photograph
+## Stephen's photograph
 
 The site uses `assets/stephen.jpg`.
 
-A portrait image works best. The layout uses `object-fit: cover`, so it crops automatically on desktop and mobile.
+The layout uses `object-fit: cover` with a portrait crop designed around the current image and adapts for desktop and mobile.
 
-## Change the birth time later
+## Birth details
 
-Edit the `BIRTH` object at the top of `script.js`:
+The source-of-truth values are in the `BIRTH` object at the top of `script.js`:
 
 ```js
 const BIRTH = {
   year: 1943,
   month: 9,
   day: 5,
-  hour: 12,
+  hour: 4,
   minute: 0,
   second: 0,
   timeZone: "Europe/London"
 };
 ```
 
-Commit and push. The site updates on the next deployment.
+## Deployment
 
-## Recommended deployment: Cloudflare Pages
+The site is deployed from this GitHub repository using Cloudflare Pages and served at:
 
-The domain is already managed by Cloudflare, so the simplest setup is GitHub as the source repository and Cloudflare Pages for deployment, DNS and TLS.
+**https://howoldisstephenevans.uk/**
 
-Connect this repository to a Cloudflare Pages project, use no build command for this plain static site, and attach `howoldisstephenevans.uk` as the custom domain.
-
-## GitHub Pages alternative
-
-A `CNAME` file is also included if you prefer GitHub Pages. Publish `main` from `/ (root)` and set `howoldisstephenevans.uk` as the custom domain.
+Pushing to `main` triggers a new deployment automatically.
