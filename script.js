@@ -117,7 +117,22 @@ function state(now) {
 
 function frac(years, progress, denominator) {
   const numerator = Math.floor(progress * denominator + 1e-12);
-  return numerator ? `${years} ${numerator}⁄${denominator}` : `${years}`;
+  return numerator ? `${years} & ${numerator}/${denominator}` : `${years}`;
+}
+
+function gcd(a, b) {
+  while (b) [a, b] = [b, a % b];
+  return a;
+}
+
+function headlineFraction(s) {
+  const denominator = 16;
+  const numerator = Math.floor(s.progress * denominator + 1e-12);
+
+  if (numerator === 0) return `${s.years} exactly`;
+
+  const divisor = gcd(numerator, denominator);
+  return `${s.years} & ${numerator / divisor}/${denominator / divisor}`;
 }
 
 function fracCard(s, denominator, ageId, countId, label) {
@@ -208,6 +223,7 @@ function update() {
   updateBirthdayMode(now, s);
 
   document.getElementById("hero-years").textContent = intFmt.format(s.years);
+  document.getElementById("hero-fraction").textContent = headlineFraction(s);
   document.getElementById("hero-precise").textContent =
     `${s.years} years, ${b.days} days, ` +
     `${String(b.hours).padStart(2, "0")} hours, ` +
