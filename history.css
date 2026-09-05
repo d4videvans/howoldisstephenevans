@@ -1,0 +1,128 @@
+.history-section {
+  padding-top: 40px;
+}
+
+.history-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.history-card {
+  min-height: 240px;
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  padding: 28px;
+  background: rgba(255,255,255,.28);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow: hidden;
+}
+
+.history-card:nth-child(1) {
+  background: #e8e0d1;
+}
+
+.history-card:nth-child(4) {
+  background: var(--ink);
+  color: #fff;
+}
+
+.history-card .history-label {
+  text-transform: uppercase;
+  letter-spacing: .14em;
+  font-size: .72rem;
+  font-weight: 700;
+  color: var(--muted);
+}
+
+.history-card:nth-child(4) .history-label,
+.history-card:nth-child(4) .history-note {
+  color: rgba(255,255,255,.55);
+}
+
+.history-value {
+  display: block;
+  margin: 28px 0 16px;
+  font-family: "DM Mono", monospace;
+  font-size: clamp(1.7rem, 4vw, 3.35rem);
+  font-weight: 500;
+  line-height: 1.08;
+  letter-spacing: -.045em;
+  overflow-wrap: anywhere;
+}
+
+.history-value.hieroglyphs {
+  font-family: "Noto Sans Egyptian Hieroglyphs", "Segoe UI Historic", "Apple Symbols", sans-serif;
+  font-size: clamp(2rem, 4vw, 3.4rem);
+  line-height: 1.2;
+  letter-spacing: 0;
+}
+
+.history-note {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.5;
+  font-size: .86rem;
+}
+
+.maya-wrap {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.maya-glyph {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 8px;
+  min-width: 88px;
+  padding: 10px 14px;
+  border-left: 1px solid var(--line);
+}
+
+.maya-place {
+  min-height: 42px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1px;
+  font-family: Georgia, serif;
+}
+
+.maya-dots {
+  font-size: .7rem;
+  letter-spacing: .16em;
+  white-space: nowrap;
+}
+
+.maya-bars {
+  font-size: 1.25rem;
+  line-height: .5;
+  letter-spacing: -.08em;
+  white-space: nowrap;
+}
+
+.maya-shell {
+  font-size: 1.35rem;
+  line-height: 1;
+}
+
+.history-key {
+  margin-top: 22px;
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+  font-size: .78rem;
+  line-height: 1.6;
+  color: var(--muted);
+}
+
+@media (max-width: 700px) {
+  .history-grid { grid-template-columns: 1fr; }
+  .history-card { min-height: 210px; }
+  .maya-wrap { align-items: center; }
+}
