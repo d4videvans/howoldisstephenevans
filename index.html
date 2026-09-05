@@ -24,7 +24,9 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&family=Playfair+Display:ital,wght@0,700;1,600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="history.css">
   <script src="script.js" defer></script>
+  <script src="history.js" defer></script>
 </head>
 <body>
   <div id="birthday-banner" class="birthday-banner" hidden>
@@ -122,6 +124,49 @@
         <article class="planet-card"><span>♂</span><small>Mars</small><strong id="mars">—</strong><em>years</em></article>
         <article class="planet-card"><span>♃</span><small>Jupiter</small><strong id="jupiter">—</strong><em>years</em></article>
         <article class="planet-card"><span>♄</span><small>Saturn</small><strong id="saturn">—</strong><em>years</em></article>
+      </div>
+    </section>
+
+    <section class="section history-section">
+      <div class="section-heading">
+        <p class="kicker">Ages of civilisation</p>
+        <h2>Decimal years are only one way to make this complicated.</h2>
+        <p>Four historical number systems, cheerfully repurposed for a job they were not necessarily designed to do.</p>
+      </div>
+
+      <div class="history-grid">
+        <article class="history-card">
+          <span class="history-label">Maya · Long Count style</span>
+          <div class="maya-wrap">
+            <div>
+              <strong id="mayan-long-count" class="history-value">—</strong>
+              <p class="history-note">Elapsed whole days as baktun · katun · tun · uinal · kin.</p>
+            </div>
+            <div id="maya-years-glyph" class="maya-glyph" aria-label="Maya-style base twenty years"></div>
+          </div>
+          <div class="history-key">1 kin = 1 day · 1 uinal = 20 days · 1 tun = 360 days · 1 katun = 7,200 days · 1 baktun = 144,000 days. This is a Long Count-style duration, not a Maya calendar date.</div>
+        </article>
+
+        <article class="history-card">
+          <span class="history-label">Ancient Egyptian · additive decimal</span>
+          <strong id="egyptian-age" class="history-value hieroglyphs">—</strong>
+          <p id="egyptian-explain" class="history-note">—</p>
+          <div class="history-key">Egyptian numerals used repeated symbols for powers of ten rather than positional digits. Here the symbols represent completed years.</div>
+        </article>
+
+        <article class="history-card">
+          <span class="history-label">Roman</span>
+          <strong id="roman-age" class="history-value">—</strong>
+          <p class="history-note">Completed years, rendered in Roman numerals.</p>
+          <div class="history-key">Compact, familiar, and entirely incapable of showing the live fractional part without becoming silly even by this site’s standards.</div>
+        </article>
+
+        <article class="history-card">
+          <span class="history-label">Babylonian-inspired · sexagesimal</span>
+          <strong id="babylonian-age" class="history-value">—</strong>
+          <p class="history-note">Age in years expressed in base 60, with four fractional sexagesimal places.</p>
+          <div class="history-key">The semicolon separates whole years from fractional places; the colon separates base-60 digits. A modern notation for an ancient positional idea.</div>
+        </article>
       </div>
     </section>
 
