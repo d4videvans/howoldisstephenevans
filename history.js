@@ -14,6 +14,15 @@
     return out || "N";
   }
 
+  function toRomanExtended(n) {
+    let value = Math.max(0, Math.floor(n));
+    if (value < 4000) return toRoman(value);
+
+    const thousands = Math.floor(value / 1000);
+    const remainder = value % 1000;
+    return `(${toRomanExtended(thousands)})${remainder ? toRoman(remainder) : ""}`;
+  }
+
   function mayaLongCount(totalDays) {
     let remaining = Math.max(0, Math.floor(totalDays));
     const baktun = Math.floor(remaining / 144000); remaining %= 144000;
@@ -69,15 +78,18 @@
   function updateHistorical() {
     const decimalEl = $("decimal-years");
     const daysEl = $("days");
-    if (!decimalEl || !daysEl) return;
+    const secondsEl = $("seconds");
+    if (!decimalEl || !daysEl || !secondsEl) return;
 
     const decimalYears = Number(decimalEl.textContent.replace(/,/g, ""));
     const totalDays = Number(daysEl.textContent.replace(/,/g, ""));
-    if (!Number.isFinite(decimalYears) || !Number.isFinite(totalDays)) return;
+    const totalSeconds = Number(secondsEl.textContent.replace(/,/g, ""));
+    if (!Number.isFinite(decimalYears) || !Number.isFinite(totalDays) || !Number.isFinite(totalSeconds)) return;
 
     const completedYears = Math.floor(decimalYears);
 
     $("roman-age").textContent = toRoman(completedYears);
+    $("roman-seconds").textContent = toRomanExtended(totalSeconds);
     $("egyptian-age").textContent = egyptianYears(completedYears);
     $("egyptian-explain").textContent = `${Math.floor(completedYears / 10)} tens + ${completedYears % 10} ones`;
     $("mayan-long-count").textContent = mayaLongCount(totalDays);
