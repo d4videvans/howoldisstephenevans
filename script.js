@@ -1,17 +1,235 @@
-const BIRTH={year:1943,month:9,day:5,hour:12,minute:0,second:0,timeZone:"Europe/London"};
-const MS={second:1000,minute:60000,hour:3600000,day:86400000,week:604800000};
-const DAYS_PER_YEAR=365.2425, DAYS_PER_MONTH=DAYS_PER_YEAR/12;
-const PLANETS={mercury:87.9691,venus:224.701,mars:686.98,jupiter:4332.59,saturn:10759.22};
-const intFmt=new Intl.NumberFormat("en-GB",{maximumFractionDigits:0});
-function parts(date,tz){const f=new Intl.DateTimeFormat("en-GB",{timeZone:tz,year:"numeric",month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit",second:"2-digit",hourCycle:"h23"});const o={};for(const p of f.formatToParts(date))if(p.type!=="literal")o[p.type]=Number(p.value);return o}
-function wallToUtc(local,tz){const desired=Date.UTC(local.year,local.month-1,local.day,local.hour??0,local.minute??0,local.second??0);let guess=desired;for(let i=0;i<4;i++){const s=parts(new Date(guess),tz);const shown=Date.UTC(s.year,s.month-1,s.day,s.hour,s.minute,s.second);const d=desired-shown;guess+=d;if(!d)break}return new Date(guess)}
-const birthInstant=wallToUtc(BIRTH,BIRTH.timeZone);
-function anniversary(year){return wallToUtc({year,month:BIRTH.month,day:BIRTH.day,hour:BIRTH.hour,minute:BIRTH.minute,second:BIRTH.second},BIRTH.timeZone)}
-function state(now){const p=parts(now,BIRTH.timeZone);let years=p.year-BIRTH.year;let last=anniversary(p.year);if(now<last){years--;last=anniversary(p.year-1)}const next=anniversary(BIRTH.year+years+1);const progress=Math.max(0,Math.min(.999999999999,(now-last)/(next-last)));return{years,last,next,progress,decimal:years+progress}}
-function frac(years,progress,d){const n=Math.floor(progress*d+1e-12);return n?`${years} ${n}⁄${d}`:`${years}`}
-function fracCard(s,d,ageId,countId,label){document.getElementById(ageId).textContent=frac(s.years,s.progress,d);document.getElementById(countId).textContent=`${intFmt.format(s.years*d+Math.floor(s.progress*d+1e-12))} completed ${label}`}
-function breakdown(now,s){let r=now-s.last;const days=Math.floor(r/MS.day);r-=days*MS.day;const hours=Math.floor(r/MS.hour);r-=hours*MS.hour;const minutes=Math.floor(r/MS.minute);r-=minutes*MS.minute;const seconds=Math.floor(r/MS.second);return{days,hours,minutes,seconds}}
-function countdown(ms){let r=Math.max(0,ms);const d=Math.floor(r/MS.day);r-=d*MS.day;const h=Math.floor(r/MS.hour);r-=h*MS.hour;const m=Math.floor(r/MS.minute);r-=m*MS.minute;const s=Math.floor(r/MS.second);return `${d}d ${String(h).padStart(2,"0")}h ${String(m).padStart(2,"0")}m ${String(s).padStart(2,"0")}s`}
-function birthdayText(date){return new Intl.DateTimeFormat("en-GB",{timeZone:BIRTH.timeZone,weekday:"long",day:"numeric",month:"long",year:"numeric",hour:"2-digit",minute:"2-digit",hourCycle:"h23",timeZoneName:"short"}).format(date)}
-function update(){const now=new Date(),elapsed=now-birthInstant,s=state(now),b=breakdown(now,s),days=elapsed/MS.day;document.getElementById("hero-years").textContent=intFmt.format(s.years);document.getElementById("hero-precise").textContent=`${s.years} years, ${b.days} days, ${String(b.hours).padStart(2,"0")} hours, ${String(b.minutes).padStart(2,"0")} minutes, ${String(b.seconds).padStart(2,"0")} seconds`;document.getElementById("seconds-live").textContent=intFmt.format(Math.floor(elapsed/MS.second));document.getElementById("birth-note").textContent=`Based on an assumed birth time of ${String(BIRTH.hour).padStart(2,"0")}:${String(BIRTH.minute).padStart(2,"0")} on 5 September 1943 in the UK.`;fracCard(s,2,"age-halves","halves-count","half-years");fracCard(s,4,"age-quarters","quarters-count","quarter-years");fracCard(s,8,"age-eighths","eighths-count","eighth-years");fracCard(s,16,"age-sixteenths","sixteenths-count","sixteenth-years");document.getElementById("decimal-years").textContent=s.decimal.toFixed(10);document.getElementById("decades").textContent=(s.decimal/10).toFixed(8);document.getElementById("months").textContent=(days/DAYS_PER_MONTH).toFixed(5);document.getElementById("weeks").textContent=(elapsed/MS.week).toFixed(5);document.getElementById("days").textContent=days.toFixed(5);document.getElementById("hours").textContent=(elapsed/MS.hour).toFixed(3);document.getElementById("minutes").textContent=(elapsed/MS.minute).toFixed(2);document.getElementById("seconds").textContent=intFmt.format(Math.floor(elapsed/MS.second));document.getElementById("milliseconds").textContent=intFmt.format(elapsed);document.getElementById("next-birthday-title").textContent=`Birthday no. ${s.years+1}`;document.getElementById("next-birthday-date").textContent=birthdayText(s.next);document.getElementById("countdown").textContent=countdown(s.next-now);for(const [p,orbit] of Object.entries(PLANETS))document.getElementById(p).textContent=(days/orbit).toFixed(1);document.getElementById("birthdays-completed").textContent=intFmt.format(s.years);document.getElementById("birth-time-display").textContent=`${String(BIRTH.hour).padStart(2,"0")}:${String(BIRTH.minute).padStart(2,"0")}, ${BIRTH.timeZone}`}
-update();setInterval(update,250);
+const BIRTH = {
+  year: 1943,
+  month: 9,
+  day: 5,
+  hour: 4,
+  minute: 0,
+  second: 0,
+  timeZone: "Europe/London"
+};
+
+const MS = {
+  second: 1000,
+  minute: 60_000,
+  hour: 3_600_000,
+  day: 86_400_000,
+  week: 604_800_000
+};
+
+const DAYS_PER_YEAR = 365.2425;
+const DAYS_PER_MONTH = DAYS_PER_YEAR / 12;
+const SYNODIC_MONTH_DAYS = 29.530588853;
+
+const PLANETS = {
+  mercury: 87.9691,
+  venus: 224.701,
+  mars: 686.98,
+  jupiter: 4332.59,
+  saturn: 10759.22
+};
+
+const intFmt = new Intl.NumberFormat("en-GB", { maximumFractionDigits: 0 });
+
+function parts(date, tz) {
+  const formatter = new Intl.DateTimeFormat("en-GB", {
+    timeZone: tz,
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    hourCycle: "h23"
+  });
+
+  const result = {};
+  for (const part of formatter.formatToParts(date)) {
+    if (part.type !== "literal") result[part.type] = Number(part.value);
+  }
+  return result;
+}
+
+function wallToUtc(local, tz) {
+  const desired = Date.UTC(
+    local.year,
+    local.month - 1,
+    local.day,
+    local.hour ?? 0,
+    local.minute ?? 0,
+    local.second ?? 0
+  );
+
+  let guess = desired;
+  for (let i = 0; i < 4; i++) {
+    const shown = parts(new Date(guess), tz);
+    const shownAsUtc = Date.UTC(
+      shown.year,
+      shown.month - 1,
+      shown.day,
+      shown.hour,
+      shown.minute,
+      shown.second
+    );
+    const correction = desired - shownAsUtc;
+    guess += correction;
+    if (correction === 0) break;
+  }
+  return new Date(guess);
+}
+
+const birthInstant = wallToUtc(BIRTH, BIRTH.timeZone);
+
+function anniversary(year) {
+  return wallToUtc({
+    year,
+    month: BIRTH.month,
+    day: BIRTH.day,
+    hour: BIRTH.hour,
+    minute: BIRTH.minute,
+    second: BIRTH.second
+  }, BIRTH.timeZone);
+}
+
+function state(now) {
+  const current = parts(now, BIRTH.timeZone);
+  let years = current.year - BIRTH.year;
+  let last = anniversary(current.year);
+
+  if (now < last) {
+    years -= 1;
+    last = anniversary(current.year - 1);
+  }
+
+  const next = anniversary(BIRTH.year + years + 1);
+  const progress = Math.max(
+    0,
+    Math.min(0.999999999999, (now - last) / (next - last))
+  );
+
+  return {
+    years,
+    last,
+    next,
+    progress,
+    decimal: years + progress
+  };
+}
+
+function frac(years, progress, denominator) {
+  const numerator = Math.floor(progress * denominator + 1e-12);
+  return numerator ? `${years} ${numerator}⁄${denominator}` : `${years}`;
+}
+
+function fracCard(s, denominator, ageId, countId, label) {
+  document.getElementById(ageId).textContent = frac(s.years, s.progress, denominator);
+  const completed = s.years * denominator + Math.floor(s.progress * denominator + 1e-12);
+  document.getElementById(countId).textContent = `${intFmt.format(completed)} completed ${label}`;
+}
+
+function breakdown(now, s) {
+  let remaining = now - s.last;
+  const days = Math.floor(remaining / MS.day);
+  remaining -= days * MS.day;
+  const hours = Math.floor(remaining / MS.hour);
+  remaining -= hours * MS.hour;
+  const minutes = Math.floor(remaining / MS.minute);
+  remaining -= minutes * MS.minute;
+  const seconds = Math.floor(remaining / MS.second);
+  return { days, hours, minutes, seconds };
+}
+
+function countdown(ms) {
+  let remaining = Math.max(0, ms);
+  const days = Math.floor(remaining / MS.day);
+  remaining -= days * MS.day;
+  const hours = Math.floor(remaining / MS.hour);
+  remaining -= hours * MS.hour;
+  const minutes = Math.floor(remaining / MS.minute);
+  remaining -= minutes * MS.minute;
+  const seconds = Math.floor(remaining / MS.second);
+
+  return `${days}d ${String(hours).padStart(2, "0")}h ${String(minutes).padStart(2, "0")}m ${String(seconds).padStart(2, "0")}s`;
+}
+
+function birthdayText(date) {
+  return new Intl.DateTimeFormat("en-GB", {
+    timeZone: BIRTH.timeZone,
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    hourCycle: "h23",
+    timeZoneName: "short"
+  }).format(date);
+}
+
+function updateBirthdayMode(now, s) {
+  const today = parts(now, BIRTH.timeZone);
+  const isBirthday = today.month === BIRTH.month && today.day === BIRTH.day;
+  const banner = document.getElementById("birthday-banner");
+  const text = document.getElementById("birthday-banner-text");
+
+  document.body.classList.toggle("birthday", isBirthday);
+  banner.hidden = !isBirthday;
+
+  if (!isBirthday) return;
+
+  const birthdayMoment = anniversary(today.year);
+  text.textContent = now >= birthdayMoment
+    ? `Happy birthday, Stephen — ${s.years} officially achieved at 04:00.`
+    : "It’s Stephen’s birthday. Official age upgrade scheduled for 04:00.";
+}
+
+function update() {
+  const now = new Date();
+  const elapsed = now - birthInstant;
+  const s = state(now);
+  const b = breakdown(now, s);
+  const days = elapsed / MS.day;
+
+  updateBirthdayMode(now, s);
+
+  document.getElementById("hero-years").textContent = intFmt.format(s.years);
+  document.getElementById("hero-precise").textContent =
+    `${s.years} years, ${b.days} days, ` +
+    `${String(b.hours).padStart(2, "0")} hours, ` +
+    `${String(b.minutes).padStart(2, "0")} minutes, ` +
+    `${String(b.seconds).padStart(2, "0")} seconds`;
+
+  document.getElementById("seconds-live").textContent =
+    intFmt.format(Math.floor(elapsed / MS.second));
+
+  fracCard(s, 2, "age-halves", "halves-count", "half-years");
+  fracCard(s, 4, "age-quarters", "quarters-count", "quarter-years");
+  fracCard(s, 8, "age-eighths", "eighths-count", "eighth-years");
+  fracCard(s, 16, "age-sixteenths", "sixteenths-count", "sixteenth-years");
+
+  document.getElementById("decimal-years").textContent = s.decimal.toFixed(10);
+  document.getElementById("decades").textContent = (s.decimal / 10).toFixed(8);
+  document.getElementById("months").textContent = (days / DAYS_PER_MONTH).toFixed(5);
+  document.getElementById("lunar-months").textContent = (days / SYNODIC_MONTH_DAYS).toFixed(4);
+  document.getElementById("dog-years").textContent = (s.decimal * 7).toFixed(6);
+  document.getElementById("weeks").textContent = (elapsed / MS.week).toFixed(5);
+  document.getElementById("days").textContent = days.toFixed(5);
+  document.getElementById("hours").textContent = (elapsed / MS.hour).toFixed(3);
+  document.getElementById("minutes").textContent = (elapsed / MS.minute).toFixed(2);
+  document.getElementById("seconds").textContent = intFmt.format(Math.floor(elapsed / MS.second));
+  document.getElementById("milliseconds").textContent = intFmt.format(elapsed);
+
+  document.getElementById("next-birthday-title").textContent = `Birthday no. ${s.years + 1}`;
+  document.getElementById("next-birthday-date").textContent = birthdayText(s.next);
+  document.getElementById("countdown").textContent = countdown(s.next - now);
+
+  for (const [planet, orbit] of Object.entries(PLANETS)) {
+    document.getElementById(planet).textContent = (days / orbit).toFixed(1);
+  }
+
+  document.getElementById("birthdays-completed").textContent = intFmt.format(s.years);
+  document.getElementById("birth-time-display").textContent =
+    `${String(BIRTH.hour).padStart(2, "0")}:${String(BIRTH.minute).padStart(2, "0")}, ${BIRTH.timeZone}`;
+}
+
+update();
+setInterval(update, 250);
