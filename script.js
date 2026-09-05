@@ -194,8 +194,8 @@ function updateBirthdayMode(now, s) {
 
   const birthdayMoment = anniversary(today.year);
   text.textContent = now >= birthdayMoment
-    ? `Happy birthday, Stephen — ${s.years} officially achieved at 04:00.`
-    : "It’s Stephen’s birthday. Official age upgrade scheduled for 04:00.";
+    ? `Happy birthday, Stephen — ${s.years} years old today.`
+    : "Happy birthday, Stephen.";
 }
 
 function update() {
