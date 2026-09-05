@@ -2,7 +2,7 @@ const BIRTH = {
   year: 1943,
   month: 9,
   day: 5,
-  hour: 4,
+  hour: 7,
   minute: 0,
   second: 0,
   timeZone: "Europe/London"
