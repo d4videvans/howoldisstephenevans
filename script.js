@@ -126,6 +126,22 @@ function fracCard(s, denominator, ageId, countId, label) {
   document.getElementById(countId).textContent = `${intFmt.format(completed)} completed ${label}`;
 }
 
+function toFixedBase(value, base, places, prefix = "") {
+  const digits = "0123456789ABCDEF";
+  const integerPart = Math.floor(value);
+  let fraction = value - integerPart;
+  let result = integerPart.toString(base).toUpperCase() + ".";
+
+  for (let i = 0; i < places; i++) {
+    fraction *= base;
+    const digit = Math.floor(fraction + Number.EPSILON);
+    result += digits[digit];
+    fraction -= digit;
+  }
+
+  return prefix + result;
+}
+
 function breakdown(now, s) {
   let remaining = now - s.last;
   const days = Math.floor(remaining / MS.day);
@@ -207,6 +223,8 @@ function update() {
   fracCard(s, 16, "age-sixteenths", "sixteenths-count", "sixteenth-years");
 
   document.getElementById("decimal-years").textContent = s.decimal.toFixed(10);
+  document.getElementById("binary-years").textContent = toFixedBase(s.decimal, 2, 5, "0b");
+  document.getElementById("hex-years").textContent = toFixedBase(s.decimal, 16, 5, "0x");
   document.getElementById("decades").textContent = (s.decimal / 10).toFixed(8);
   document.getElementById("months").textContent = (days / DAYS_PER_MONTH).toFixed(5);
   document.getElementById("lunar-months").textContent = (days / SYNODIC_MONTH_DAYS).toFixed(4);
