@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101722">
+  <meta name="description" content="The definitive, needlessly precise answer to one important family question: how old is Stephen Evans?">
+  <title>How old is Stephen Evans?</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&family=Playfair+Display:ital,wght@0,700;1,600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <main>
+    <section class="hero">
+      <div class="hero-inner">
+        <div class="portrait-wrap" aria-label="Photograph of Stephen Evans">
+          <div class="portrait-fallback" aria-hidden="true">
+            <span>SE</span>
+          </div>
+          <img id="portrait" class="portrait" src="assets/stephen.jpg" alt="Stephen Evans" onerror="this.hidden=true">
+        </div>
+        <div class="hero-copy">
+          <p class="eyebrow">A definitive family reference service</p>
+          <h1>How old is<br><em>Stephen Evans?</em></h1>
+          <div class="big-answer" aria-live="polite">
+            <span id="hero-years">—</span>
+            <span class="big-answer-unit">years old</span>
+          </div>
+          <p id="hero-precise" class="hero-precise">Calculating with unnecessary precision…</p>
+          <p id="birth-note" class="birth-note"></p>
+        </div>
+      </div>
+      <div class="ticker" aria-label="Live age in seconds">
+        <span class="ticker-label">Current age in seconds</span>
+        <span id="seconds-live" class="ticker-number">—</span>
+        <span class="live-dot" aria-hidden="true"></span>
+      </div>
+    </section>
+
+    <section class="section fractions-section">
+      <div class="section-heading">
+        <p class="kicker">The fractions department</p>
+        <h2>Because whole years are far too vague.</h2>
+        <p>Each figure shows the largest completed fraction of the current year. No rounding up: that would be age fraud.</p>
+      </div>
+      <div class="fraction-grid">
+        <article class="fraction-card"><span class="fraction-label">Halves</span><strong id="age-halves">—</strong><small id="halves-count">—</small></article>
+        <article class="fraction-card"><span class="fraction-label">Quarters</span><strong id="age-quarters">—</strong><small id="quarters-count">—</small></article>
+        <article class="fraction-card"><span class="fraction-label">Eighths</span><strong id="age-eighths">—</strong><small id="eighths-count">—</small></article>
+        <article class="fraction-card fraction-card-special"><span class="fraction-label">Sixteenths</span><strong id="age-sixteenths">—</strong><small id="sixteenths-count">—</small></article>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-heading compact">
+        <p class="kicker">Needlessly precise</p>
+        <h2>One life, several units.</h2>
+      </div>
+      <div class="stat-grid">
+        <article class="stat-card featured"><span>Calendar years</span><strong id="decimal-years">—</strong><small>Fraction of the current birthday-to-birthday year</small></article>
+        <article class="stat-card"><span>Decades</span><strong id="decades">—</strong></article>
+        <article class="stat-card"><span>Gregorian mean months</span><strong id="months">—</strong></article>
+        <article class="stat-card"><span>Weeks</span><strong id="weeks">—</strong></article>
+        <article class="stat-card"><span>Days</span><strong id="days">—</strong></article>
+        <article class="stat-card"><span>Hours</span><strong id="hours">—</strong></article>
+        <article class="stat-card"><span>Minutes</span><strong id="minutes">—</strong></article>
+        <article class="stat-card"><span>Seconds</span><strong id="seconds">—</strong></article>
+        <article class="stat-card"><span>Milliseconds</span><strong id="milliseconds">—</strong></article>
+      </div>
+    </section>
+
+    <section class="section milestone-section">
+      <div class="milestone-card">
+        <div><p class="kicker">Next official upgrade</p><h2 id="next-birthday-title">Next birthday</h2><p id="next-birthday-date" class="milestone-date">—</p></div>
+        <div id="countdown" class="countdown" aria-live="polite">—</div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-heading compact">
+        <p class="kicker">Interplanetary age fraud</p>
+        <h2>On other planets, the number gets much better.</h2>
+        <p>Approximate ages using each planet’s orbital period.</p>
+      </div>
+      <div class="planet-grid">
+        <article class="planet-card"><span>☿</span><small>Mercury</small><strong id="mercury">—</strong><em>years</em></article>
+        <article class="planet-card"><span>♀</span><small>Venus</small><strong id="venus">—</strong><em>years</em></article>
+        <article class="planet-card"><span>♂</span><small>Mars</small><strong id="mars">—</strong><em>years</em></article>
+        <article class="planet-card"><span>♃</span><small>Jupiter</small><strong id="jupiter">—</strong><em>years</em></article>
+        <article class="planet-card"><span>♄</span><small>Saturn</small><strong id="saturn">—</strong><em>years</em></article>
+      </div>
+    </section>
+
+    <section class="section facts-section">
+      <div class="facts-card">
+        <p class="kicker">For the record</p>
+        <dl>
+          <div><dt>Born</dt><dd>Sunday, 5 September 1943</dd></div>
+          <div><dt>Assumed birth time</dt><dd id="birth-time-display">12:00, Europe/London</dd></div>
+          <div><dt>Completed birthdays</dt><dd id="birthdays-completed">—</dd></div>
+          <div><dt>Precision policy</dt><dd>Excessive</dd></div>
+        </dl>
+      </div>
+    </section>
+  </main>
+  <footer>
+    <p>Maintained in the interests of family accuracy.</p>
+    <p class="footer-small">The birth time is currently assumed and can be changed in <code>script.js</code>.</p>
+  </footer>
+</body>
+</html>
