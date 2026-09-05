@@ -240,6 +240,7 @@ function update() {
 
   document.getElementById("decimal-years").textContent = s.decimal.toFixed(10);
   document.getElementById("binary-years").textContent = toFixedBase(s.decimal, 2, 5, "0b");
+  document.getElementById("octal-years").textContent = toFixedBase(s.decimal, 8, 5, "0o");
   document.getElementById("hex-years").textContent = toFixedBase(s.decimal, 16, 5, "0x");
   document.getElementById("decades").textContent = (s.decimal / 10).toFixed(8);
   document.getElementById("months").textContent = (days / DAYS_PER_MONTH).toFixed(5);
